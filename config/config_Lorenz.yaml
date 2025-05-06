@@ -1,0 +1,8 @@
+dataset:
+  name: ODE_Lorenz
+  pair_id: 'all'
+model:
+  name: SINDy
+  differentiation_method_order: 2
+  feature_library_order: 4
+  threshold: 0.1

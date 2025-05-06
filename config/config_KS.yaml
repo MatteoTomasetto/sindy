@@ -1,0 +1,8 @@
+dataset:
+  name: PDE_KS
+  pair_id: 'all'
+model:
+  name: SINDy
+  differentiation_method_order: 2
+  feature_library_order: 5
+  threshold: 0.05

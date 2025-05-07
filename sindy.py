@@ -27,9 +27,7 @@ class SINDy:
         train_parameters (np.ndarray): Training parameters for the model.
         test_parameters (np.ndarray): Testing parameters for the model.
 
-        differentiation_method_order (int): Order of the differentiation method.
         differentiation_method (ps.SINDyDerivative): Differentiation method for SINDy.
-        feature_library_order (int): Order of the feature library.
         feature_library: Feature library for SINDy.
         threshold (float): Threshold for the optimizer.
         optimizer: Optimizer for SINDy.
@@ -46,6 +44,9 @@ class SINDy:
             delta_t (float): Timestep length
             init_data (np.ndarray): Burn-in data for prediction.
             prediction_timesteps (np.ndarray): Prediction timesteps for the model.
+
+        Raises:
+            ValueError: If differentiation method, feature library or optimizer is invalid.
         """     
 
         self.pair_id = pair_id
@@ -80,26 +81,39 @@ class SINDy:
             self.train_parameters = None
             self.test_parameters = None
 
-        self.differentiation_method_order = config['model']['differentiation_method_order']
-        self.differentiation_method = ps.FiniteDifference(order = self.differentiation_method_order)# drop_endpoints=False)
-        #    ("Finite Difference", ps.SINDyDerivative(kind="finite_difference", k=1)),
-        #ps.SmoothedFiniteDifference(), ps.SINDyDerivative(kind="savitzky_golay", left=0.5, right=0.5, order=3),
-        #ps.SINDyDerivative(kind="spline", s=1e-2)),
-        # ("Trend Filtered", ps.SINDyDerivative(kind="trend_filtered", order=0, alpha=1e-2)),
-        #("Spectral", ps.SINDyDerivative(kind="spectral")),
-        #("Kalman", ps.SINDyDerivative(kind="kalman", alpha=0.05)),
+        if config['model']['differentiation_method'] == 'finite_difference':
+            self.differentiation_method = ps.SINDyDerivative(kind = "finite_difference", k = config['model']['differentiation_method_order'])
+        elif config['model']['differentiation_method'] == 'savitzky_golay':
+            self.differentiation_method = ps.SINDyDerivative(kind = "savitzky_golay", order = config['model']['differentiation_method_order'])
+        elif config['model']['differentiation_method'] == 'spline':
+            self.differentiation_method = ps.SINDyDerivative(kind = "spline")
+        elif config['model']['differentiation_method'] == 'trend_filtered':
+            self.differentiation_method = ps.SINDyDerivative(kind = "trend_filtered", order = config['model']['differentiation_method_order'])
+        elif config['model']['differentiation_method'] == 'spectral':
+            self.differentiation_method = ps.SINDyDerivative(kind = "spectral")
+        elif config['model']['differentiation_method'] == 'kalman':
+            self.differentiation_method = ps.SINDyDerivative(kind = "kalman")
+        else:
+            raise ValueError("Select a valid differentiation method. The following are available: 'finite_difference', 'savitzky_golay', 'spline', 'trend_filtered', 'spectral', 'kalman'.")
 
-        self.feature_library_order = config['model']['feature_library_order']
-        self.feature_library = ps.PolynomialLibrary(degree = self.feature_library_order)#, include_bias=False)
-        #self.feature_library = ps.FourierLibrary()
+        if config['model']['feature_library'] == 'polynomial':
+            self.feature_library = ps.PolynomialLibrary(degree = config['model']['feature_library_order'])
+        elif config['model']['feature_library'] == 'Fourier':
+            self.feature_library = ps.FourierLibrary()
+        else:
+            raise ValueError("Select a valid feature library. The following are available: 'polynomial', 'Fourier'.")
 
         self.threshold = config['model']['threshold']
-        self.optimizer = ps.STLSQ(threshold = self.threshold)#, alpha=1e-5, normalize_columns=True)
-        #optimizer = ps.SR3(threshold=7, max_iter=10000, tol=1e-15, nu=1e2,  thresholder='l0', normalize_columns=True)
-        #optimizer = ps.SR3(threshold=0.05, max_iter=10000, tol=1e-15, thresholder='l1', normalize_columns=True)
-        #optimizer = ps.SSR(normalize_columns=True, kappa=5e-3)
-        #optimizer = ps.SSR(criteria='model_residual', normalize_columns=True, kappa=5e-3)
-        #optimizer = ps.FROLS(normalize_columns=True, kappa=1e-5)
+        if config['model']['optimizer'] == 'STLSQ':
+            self.optimizer = ps.STLSQ(threshold = self.threshold, normalize_columns=True)
+        elif config['model']['optimizer'] == 'SR3':
+            self.optimizer = ps.SR3(threshold = self.threshold, normalize_columns=True)
+        elif config['model']['optimizer'] == 'SSR':
+            self.optimizer = ps.SSR(normalize_columns=True, normalize_columns = True)
+        elif config['model']['optimizer'] == 'FROLS':
+            self.optimizer = ps.FROLS(normalize_columns=True)
+        else:
+            raise ValueError("Select a valid optimizer. The following are available: 'STLSQ', 'SR3', 'SSR', 'FROLS'.")
 
     
     def compress_data(self) -> Tuple[List[np.ndarray], np.ndarray, np.ndarray]:
@@ -146,6 +160,9 @@ class SINDy:
         
         if len(train_data) == 1:
             output_train_data = train_data[0].T
+            
+            output_init_data = init_data
+
         else:
             output_train_data = []
             for i in range(len(train_data)):
@@ -174,6 +191,7 @@ class SINDy:
                         optimizer = self.optimizer)
 
         model.fit(train_data, t = self.delta_t, multiple_trajectories = multiple_trajectories)
+        #library_ensemble=True, ensemble=True, n_candidates_to_drop=2, n_models=100, replace=False, quiet=True)
 
         return model
 
@@ -186,7 +204,12 @@ class SINDy:
             np.ndarray: array of predictions.  
         """
     
-        train_data, init_data, U = self.train_data, self.init_data, None if not self.reduction else self.compress_data()
+        if self.reduction:
+            train_data, init_data, U = self.compress_data()
+        else:
+            train_data = self.train_data
+            init_data = self.init_data
+            U = None
 
         train_data, init_data = self.build_data(train_data, init_data)
 
@@ -196,10 +219,10 @@ class SINDy:
         model.print()
 
         predictions = model.simulate(init_data, t = self.prediction_timesteps)
-        
+
         if self.reduction is False:
             predictions = predictions[:, :self.n].T
         else:
-            predictions = U[:, :self.POD_modes] @ predictions[:, :self.POD_modes]
+            predictions = U[:, :self.POD_modes] @ predictions[:, :self.POD_modes].T
 
         return predictions

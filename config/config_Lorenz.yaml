@@ -3,6 +3,7 @@ dataset:
   pair_id: 'all'
 model:
   name: SINDy
+  POD_modes: 3
   differentiation_method_order: 2
   feature_library_order: 4
   threshold: 0.1

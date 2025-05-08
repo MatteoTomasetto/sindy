@@ -223,7 +223,11 @@ class SINDy:
         print(f"Model identified for pair_id {self.pair_id}:")
         model.print()
 
-        predictions = model.simulate(init_data, t = self.prediction_timesteps)
+        try:
+            predictions = model.simulate(init_data, t = self.prediction_timesteps)
+        except: # If integrator fails, consider the static dynamical system \dot{x} = 0 as default          
+            print(f"Integrator failed pair_id {self.pair_id}. Using static dynamical system.")
+            predictions = np.tile(init_data, (len(self.prediction_timesteps), 1))
 
         if self.reduction is False:
             predictions = predictions[:, :self.n].T

@@ -9,12 +9,12 @@ X = \begin{bmatrix}
 x_1(t_1) & x_2(t_1) & ... & x_n(t_1)
 \vdots & \vdots & \ddots & \vdots
 x_1(t_m) & x_2(t_m) & ... & x_n(t_m)
-\end{bamtrix}; \quad 
+\end{bmatrix}; \quad 
 \frac{d}{dt} X = \begin{bmatrix}
 \frac{d}{dt} x_1(t_1) & \frac{d}{dt} x_2(t_1) & ... & \frac{d}{dt} x_n(t_1)
 \vdots & \vdots & \ddots & \vdots
 \frac{d}{dt} x_1(t_m) & \frac{d}{dt} x_2(t_m) & ... & \frac{d}{dt} x_n(t_m)
-\end{bamtrix};
+\end{bmatrix};
 $$
 
 the dynamical system $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ is approximated through

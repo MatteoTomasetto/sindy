@@ -6,13 +6,11 @@ Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designe
 
 $$
 X =
-\left[
-\begin{array}
+\left[\begin{array}
 x_1(t_1) & x_2(t_1) & ... & x_n(t_1) \\
 \vdots & \vdots & \ddots & \vdots \\
 x_1(t_m) & x_2(t_m) & ... & x_n(t_m) \\
-\end{array}
-\right]
+\end{array}\right]
 \quad 
 \frac{d}{dt} X =
 \begin{matrix}

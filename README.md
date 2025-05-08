@@ -9,7 +9,9 @@ $$
 a & b \\
 c & d \\
 \end{array} \right]
+$$
 
+$$
 X = \left[
 \begin{array}
 x_1(t_1) & x_2(t_1) & ... & x_n(t_1) \\

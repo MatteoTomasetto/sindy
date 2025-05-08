@@ -2,35 +2,7 @@
 
 This directory contains an implementation of *Sparse Identification of Nonlinear Dynamics* for [CTF-for-Science](https://github.com/CTF-for-Science).
 
-Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designed to identify nonlinear dynamical systems $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ from time-series data. Sparsity promoting strategies are considered in order to obtain interpretable dynamical systems with few active terms in the governing equations, capable of accurately extrapolating beyond the training trajectories. Specifically, given the time-series data
-
-$$
-\left[ \begin{array}{cc}
-a & b \\
-c & d \\
-\end{array} \right]
-$$
-
-$$
-X = \left[
-\begin{array}
-x_1(t_1) & x_2(t_1) & ... & x_n(t_1) \\
-\vdots & \vdots & \ddots & \vdots \\
-x_1(t_m) &x_2(t_m) & ... & x_n(t_m)
-\end{array}
-\right]
-\quad 
-\frac{d}{dt} X =
-\begin{equation}
-\begin{bmatrix}
-\frac{d}{dt} x_1(t_1) & \frac{d}{dt} x_2(t_1) & ... & \frac{d}{dt} x_n(t_1) \\
-\vdots & \vdots & \ddots & \vdots \\
-\frac{d}{dt} x_1(t_m) & \frac{d}{dt} x_2(t_m) & ... & \frac{d}{dt} x_n(t_m)
-\end{bmatrix}
-\end{equation},
-$$
-
-the dynamical system $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ is approximated through
+Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designed to identify nonlinear dynamical systems $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ from time-series data. Sparsity promoting strategies are considered in order to obtain interpretable dynamical systems with few active terms in the governing equations, capable of accurately extrapolating beyond the training trajectories. Specifically, given the time-series data $X = [x_i(t_j)]$ and $\frac{d}{dt}X = [\frac{d}{dt}x_i(t_j)]$ for $i=1,...,n$ and $j = 1,...,m$, the dynamical system $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ is approximated through
 
 $$
 \dfrac{d}{dt} X = \Theta(X) \Xi

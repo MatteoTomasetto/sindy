@@ -6,8 +6,8 @@ Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designe
 
 $$
 \begin{bmatrix}
-1 & 2 & 3 \\
-1 & 2 & 3 \\
+1 & 2 & 3 \\\
+1 & 2 & 3 \\\
 1 & 2 & 3 
 \end{bmatrix}
 $$

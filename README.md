@@ -2,17 +2,35 @@
 
 This directory contains an implementation of *Sparse Identification of Nonlinear Dynamics* for [CTF-for-Science](https://github.com/CTF-for-Science).
 
-Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designed to identify nonlinear dynamical systems $\dot{𝙭} = f(𝙭)$ from time-series data. Sparsity promoting strategies are considered in order to obtain interpretable dynamical systems with few active terms in the governing equations, capable of accurately extrapolating beyond the training trajectories. Specifically, the dynamical system $\dot{𝙭} = f(𝙭)$ is approximated through
+Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designed to identify nonlinear dynamical systems $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ from time-series data. Sparsity promoting strategies are considered in order to obtain interpretable dynamical systems with few active terms in the governing equations, capable of accurately extrapolating beyond the training trajectories. Specifically, given the time-series data
 
 $$
-\dot{X} = \Theta(X) \Xi
+X = \begin{bmatrix}
+x_1(t_1) & x_2(t_1) & ... & x_n(t_1)
+\vdots & \vdots & \ddots & \vdots
+x_1(t_m) & x_2(t_m) & ... & x_n(t_m)
+\end{bamtrix}; \quad 
+\frac{d}{dt} X = \begin{bmatrix}
+\frac{d}{dt} x_1(t_1) & \frac{d}{dt} x_2(t_1) & ... & \frac{d}{dt} x_n(t_1)
+\vdots & \vdots & \ddots & \vdots
+\frac{d}{dt} x_1(t_m) & \frac{d}{dt} x_2(t_m) & ... & \frac{d}{dt} x_n(t_m)
+\end{bamtrix};
 $$
 
-where $\Theta(X)$ is a library of regressions terms and $\Xi$ are the corresponding coefficients, which are determiend through linear regression. To promote sparsity, LASSO or Sequentially Thresholded Least Squares algorithm
+the dynamical system $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ is approximated through
 
+$$
+\dfrac{d}{dt} X = \Theta(X) \Xi
+$$
 
+where $\Theta(X)$ is a library of regressions terms (polynomials or trigonometric functions are typically considered) and $\Xi$ are the corresponding coefficients, which are determiend through linear regression. To promote sparsity, the Least Absolute Shrinkage and Selection Operator (LASSO) or Sequentially Thresholded Least SQuares (STLSQ) are typically considered to determine the coefficient values.
 
-
+<br />
+<p align="center" width="75%">
+  <img width=100% src="./sindy.png" >
+  <br />
+</p>
+<br />
 
 ## Files
 - `sindy.py`: Contains the `SINDy` class implementing the model logic based on [pysindy](https://github.com/dynamicslab/pysindy).

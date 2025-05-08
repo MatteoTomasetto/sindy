@@ -196,8 +196,7 @@ class SINDy:
                         feature_library = self.feature_library,
                         optimizer = self.optimizer)
 
-        model.fit(train_data, t = self.delta_t, multiple_trajectories = multiple_trajectories)
-        #library_ensemble=True, ensemble=True, n_candidates_to_drop=2, n_models=100, replace=False, quiet=True)
+        model.fit(train_data, t = self.delta_t, multiple_trajectories = multiple_trajectories, library_ensemble = True, ensemble = True, quiet=True)
 
         return model
 

@@ -84,11 +84,11 @@ class SINDy:
         if config['model']['differentiation_method'] == 'finite_difference':
             self.differentiation_method = ps.SINDyDerivative(kind = "finite_difference", k = config['model']['differentiation_method_order'])
         elif config['model']['differentiation_method'] == 'savitzky_golay':
-            self.differentiation_method = ps.SINDyDerivative(kind = "savitzky_golay", order = config['model']['differentiation_method_order'])
+            self.differentiation_method = ps.SINDyDerivative(kind = "savitzky_golay", order = config['model']['differentiation_method_order'], left = 0.5, right = 0.5)
         elif config['model']['differentiation_method'] == 'spline':
-            self.differentiation_method = ps.SINDyDerivative(kind = "spline")
+            self.differentiation_method = ps.SINDyDerivative(kind = "spline", s = 1e-2)
         elif config['model']['differentiation_method'] == 'trend_filtered':
-            self.differentiation_method = ps.SINDyDerivative(kind = "trend_filtered", order = config['model']['differentiation_method_order'])
+            self.differentiation_method = ps.SINDyDerivative(kind = "trend_filtered", order = config['model']['differentiation_method_order'], alpha = 1e-2)
         elif config['model']['differentiation_method'] == 'spectral':
             self.differentiation_method = ps.SINDyDerivative(kind = "spectral")
         elif config['model']['differentiation_method'] == 'kalman':
@@ -99,19 +99,25 @@ class SINDy:
         if config['model']['feature_library'] == 'polynomial':
             self.feature_library = ps.PolynomialLibrary(degree = config['model']['feature_library_order'])
         elif config['model']['feature_library'] == 'Fourier':
-            self.feature_library = ps.FourierLibrary()
+            self.feature_library = ps.FourierLibrary(n_frequencies = config['model']['feature_library_order'])
+        elif config['model']['feature_library'] == 'mixed':
+            self.feature_library = ps.GeneralizedLibrary(
+                [ps.PolynomialLibrary(degree = config['model']['feature_library_order']),
+                ps.FourierLibrary(n_frequencies = config['model']['feature_library_order'])]
+            )
         else:
-            raise ValueError("Select a valid feature library. The following are available: 'polynomial', 'Fourier'.")
+            raise ValueError("Select a valid feature library. The following are available: 'polynomial', 'Fourier', 'mixed'.")
 
         self.threshold = config['model']['threshold']
+        self.alpha = config['model']['alpha']
         if config['model']['optimizer'] == 'STLSQ':
-            self.optimizer = ps.STLSQ(threshold = self.threshold, normalize_columns=True)
+            self.optimizer = ps.STLSQ(threshold = self.threshold, alpha = self.alpha, normalize_columns = True)
         elif config['model']['optimizer'] == 'SR3':
-            self.optimizer = ps.SR3(threshold = self.threshold, normalize_columns=True)
+            self.optimizer = ps.SR3(threshold = self.threshold, normalize_columns = True)
         elif config['model']['optimizer'] == 'SSR':
-            self.optimizer = ps.SSR(normalize_columns=True, normalize_columns = True)
+            self.optimizer = ps.SSR(alpha = self.alpha, normalize_columns = True)
         elif config['model']['optimizer'] == 'FROLS':
-            self.optimizer = ps.FROLS(normalize_columns=True)
+            self.optimizer = ps.FROLS(alpha = self.alpha, normalize_columns = True)
         else:
             raise ValueError("Select a valid optimizer. The following are available: 'STLSQ', 'SR3', 'SSR', 'FROLS'.")
 

@@ -1,6 +1,6 @@
 dataset:
   name: ODE_Lorenz
-  pair_id: 'all'
+  pair_id: [1]
 model:
   name: SINDy
   POD_modes: 3
@@ -8,5 +8,6 @@ model:
   differentiation_method_order: 2
   feature_library: 'polynomial'
   feature_library_order: 4
-  threshold: 0.5
   optimizer: 'STLSQ'
+  threshold: 1.0
+  alpha: 0.05

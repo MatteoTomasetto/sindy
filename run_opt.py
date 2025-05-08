@@ -8,7 +8,7 @@ import numpy as np
 from ctf4science.data_module import load_dataset, load_validation_dataset, get_validation_prediction_timesteps, parse_pair_ids, get_applicable_plots, get_metadata
 from ctf4science.eval_module import evaluate_custom, save_results
 from ctf4science.visualization_module import Visualization
-from models.sindy.sindy import DeepONet
+from sindy import SINDy
 
 # Delete results directory - used for storing batch_results
 file_dir = Path(__file__).parent
@@ -65,7 +65,7 @@ def main(config_path: str) -> None:
         delta_t = get_metadata(dataset_name)['delta_t']
 
         # Initialize model
-        model = DeepONet(pair_id, config, train_data, init_data, prediction_timesteps, delta_t)
+        model = SINDy(pair_id, config, train_data, delta_t, init_data, prediction_timesteps)
 
         # Generate predictions
         pred_data = model.predict()

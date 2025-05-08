@@ -1,6 +1,17 @@
 # Sparse Identification of Nonlinear Dynamics
 
-This directory contains an implementation of *SINDy* for [CTF-for-Science](https://github.com/CTF-for-Science).
+This directory contains an implementation of *Sparse Identification of Nonlinear Dynamics* for [CTF-for-Science](https://github.com/CTF-for-Science).
+
+Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designed to identify nonlinear dynamical systems $\dot{𝙭} = f(𝙭)$ from time-series data. Sparsity promoting strategies are considered in order to obtain interpretable dynamical systems with few active terms in the governing equations, capable of accurately extrapolating beyond the training trajectories. Specifically, the dynamical system $\dot{𝙭} = f(𝙭)$ is approximated through
+
+$$
+\dot{X} = \Theta(X) \Xi
+$$
+
+where $\Theta(X)$ is a library of regressions terms and $\Xi$ are the corresponding coefficients, which are determiend through linear regression. To promote sparsity, LASSO or Sequentially Thresholded Least Squares algorithm
+
+
+
 
 
 ## Files
@@ -30,3 +41,5 @@ python models/sindy/run.py models/sindy/config_*.yaml
 
 
 ## References
+Brunton, Steven L., Joshua L. Proctor, and J. Nathan Kutz. 2016. “Discovering Governing Equations from Data by Sparse Identification of Nonlinear Dynamical Systems.” Proceedings of the National Academy of Sciences 113 (15): 3932–37. https://doi.org/10.1073/pnas.1517384113.
+

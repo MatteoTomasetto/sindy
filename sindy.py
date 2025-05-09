@@ -1,6 +1,6 @@
+from typing import List, Tuple, Dict, Optional
 import pysindy as ps
 import numpy as np
-from typing import List, Tuple, Dict, Optional
 
 np.random.seed(2025)
 

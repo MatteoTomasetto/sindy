@@ -12,8 +12,8 @@ class SINDy:
         pair_id (int): Identifier for the data pair to consider.
                 
         train_data List[np.ndarray]: Training data.
-        n (int): Number of spatial points.
         m (int): Number of time points.
+        n (int): Number of spatial points.
         delta_t (float): Timestep length.
         t (np.ndarray): Time array.
 
@@ -52,18 +52,18 @@ class SINDy:
         self.pair_id = pair_id
         
         self.train_data = train_data
-        self.n = train_data[0].shape[0]
-        self.m = train_data[0].shape[1]
+        self.m = train_data[0].shape[0]
+        self.n = train_data[0].shape[1]
         self.delta_t = delta_t
         self.t = np.arange(self.m) * self.delta_t
 
         # Define the initial data for model prediction
         if init_data is not None: # Parametric interpolation/extrapolation task
-            self.init_data = init_data[:,-1]
+            self.init_data = init_data[-1,:]
         elif self.pair_id == 2 or self.pair_id == 4: # Reconstruction task
-            self.init_data = train_data[0][:,0]
+            self.init_data = train_data[0][0,:]
         else: # Forecasting task
-            self.init_data = train_data[0][:,-1]
+            self.init_data = train_data[0][-1,:]
 
         self.reduction = True if config['dataset']['name'] == 'PDE_KS' else False 
         self.POD_modes = config['model']['POD_modes']
@@ -132,9 +132,9 @@ class SINDy:
             np.ndarray: Left singular values from Singular Values Decomposition.
         """
 
-        full_data = np.concatenate(self.train_data, axis = 1)
+        full_data = np.concatenate(self.train_data, axis = 0)
                 
-        U, S, _ = np.linalg.svd(full_data, full_matrices = False)
+        _, S, V = np.linalg.svd(full_data, full_matrices = False)
 
         residual_energy = np.sum(S[:self.POD_modes]**2) / np.sum(S**2)
         if residual_energy <= 0.9:
@@ -144,11 +144,11 @@ class SINDy:
 
         reduced_data = []
         for i in range(len(self.train_data)):
-            reduced_data.append(U[:, :self.POD_modes].T @ self.train_data[i])     
+            reduced_data.append(self.train_data[i] @ V[:self.POD_modes, :].T)     
 
-        reduced_init_data = U[:, :self.POD_modes].T @ self.init_data if self.init_data is not None else None
+        reduced_init_data = self.init_data @ V[:self.POD_modes, :].T if self.init_data is not None else None
 
-        return reduced_data, reduced_init_data, U
+        return reduced_data, reduced_init_data, V
     
 
     def build_data(self, train_data: List[np.ndarray], init_data: np.ndarray) -> np.ndarray:
@@ -165,16 +165,16 @@ class SINDy:
         """
         
         if len(train_data) == 1:
-            output_train_data = train_data[0].T
+            output_train_data = train_data[0]
             
             output_init_data = init_data
 
         else:
             output_train_data = []
             for i in range(len(train_data)):
-                output_train_data.append(np.hstack((train_data[i].T, self.train_parameters[i] * np.ones((self.m, 1)))))
+                output_train_data.append(np.vstack((train_data[i], self.train_parameters[i] * np.ones((self.m, 1)))))
             
-            output_init_data = np.hstack((init_data, self.test_parameters))
+            output_init_data = np.vstack((init_data, self.test_parameters))
 
         return output_train_data, output_init_data
 
@@ -196,7 +196,7 @@ class SINDy:
                         feature_library = self.feature_library,
                         optimizer = self.optimizer)
 
-        model.fit(train_data, t = self.delta_t, multiple_trajectories = multiple_trajectories, library_ensemble = True, ensemble = True, quiet=True)
+        model.fit(train_data, t = self.delta_t, multiple_trajectories = multiple_trajectories, library_ensemble = True, ensemble = True, quiet = True)
 
         return model
 
@@ -210,11 +210,11 @@ class SINDy:
         """
     
         if self.reduction:
-            train_data, init_data, U = self.compress_data()
+            train_data, init_data, V = self.compress_data()
         else:
             train_data = self.train_data
             init_data = self.init_data
-            U = None
+            V = None
 
         train_data, init_data = self.build_data(train_data, init_data)
 
@@ -226,12 +226,12 @@ class SINDy:
         try:
             predictions = model.simulate(init_data, t = self.prediction_timesteps)
         except: # If integrator fails, consider the static dynamical system \dot{x} = 0 as default          
-            print(f"Integrator failed pair_id {self.pair_id}. Using static dynamical system.")
+            print(f"Integrator failed for pair_id {self.pair_id}. Using static dynamical system.")
             predictions = np.tile(init_data, (len(self.prediction_timesteps), 1))
 
         if self.reduction is False:
-            predictions = predictions[:, :self.n].T
+            predictions = predictions[:,:self.n]
         else:
-            predictions = U[:, :self.POD_modes] @ predictions[:, :self.POD_modes].T
+            predictions = predictions[:,:self.POD_modes] @ V[:self.POD_modes, :]
 
         return predictions

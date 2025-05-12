@@ -3,11 +3,11 @@ dataset:
   pair_id: 'all'
 model:
   name: SINDy
-  POD_modes: 20
+  POD_modes: 2
   differentiation_method: 'finite_difference'
   differentiation_method_order: 2
   feature_library: 'polynomial'
   feature_library_order: 5
   optimizer: 'STLSQ'
-  threshold: 0.0001
+  threshold: 0.01
   alpha: 0.05

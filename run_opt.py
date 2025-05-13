@@ -21,7 +21,7 @@ file_dir = Path(__file__).parent
 
 def main(config_path: str) -> None:
     """
-    Main function to run the DeepONet model on specified sub-datasets.
+    Main function to run the SINDy model on specified sub-datasets.
 
     Loads configuration, parses pair_ids, initializes the model, generates predictions,
     evaluates them, and saves results for each sub-dataset under a batch identifier.
@@ -45,7 +45,7 @@ def main(config_path: str) -> None:
     # batch_id is from optimize_parameters.py
     batch_id = f"hyper_opt_{config['model']['batch_id']}"
  
-    # Initialize batch results dictionary for summary
+    # # # Initialize batch results dictionary for summary
     batch_results = {
         'batch_id': batch_id,
         'model': model_name,

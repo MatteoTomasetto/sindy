@@ -69,15 +69,17 @@ class SINDy:
 
         # Define the model parameters
         if pair_id == 8:
-            self.train_parameters =  np.array([1.,2.,4.]) if len(self.train_data) > 2 else np.array([1.,3.])
-            self.test_parameters = np.array([3.]) if len(self.train_data) > 2 else np.array([2.])
+            parameters = np.arange(len(train_data) + 1) + 1.
+            self.train_parameters =  np.delete(parameters, -2)
+            self.test_parameters = np.array([parameters[-2]])
         elif pair_id == 9:
-            self.train_parameters =  np.array([1.,2.,3.]) if len(self.train_data) > 2 else np.array([1.,2.])
-            self.test_parameters = np.array([4.]) if len(self.train_data) > 2 else np.array([3.])
+            parameters = np.arange(len(train_data) + 1) + 1.
+            self.train_parameters =  parameters[:-1]
+            self.test_parameters = np.array([parameters[-1]])
         else:
             self.train_parameters = None
             self.test_parameters = None
-
+        
         if config['model']['differentiation_method'] == 'finite_difference':
             self.differentiation_method = ps.SINDyDerivative(kind = "finite_difference", k = config['model']['differentiation_method_order'])
         elif config['model']['differentiation_method'] == 'savitzky_golay':
@@ -169,9 +171,8 @@ class SINDy:
         else:
             output_train_data = []
             for i in range(len(train_data)):
-                output_train_data.append(np.vstack((train_data[i], self.train_parameters[i] * np.ones((self.m, 1)))))
-            
-            output_init_data = np.vstack((init_data, self.test_parameters))
+                output_train_data.append(np.hstack((train_data[i], self.train_parameters[i] * np.ones((self.m, 1)))))
+            output_init_data = np.concatenate((init_data, self.test_parameters))
 
         return output_train_data, output_init_data
 

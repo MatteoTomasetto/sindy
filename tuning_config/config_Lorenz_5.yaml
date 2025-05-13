@@ -11,21 +11,21 @@ model:
 hyperparameters: # Specify hyperparameters and ranges
   differentiation_method:
     type: choice
-    values: ["finite_difference", "savitzky_golay", "spline", "trend_filtered", "spectral", "kalman"]
+    choices: ["finite_difference", "savitzky_golay", "spline", "trend_filtered", "spectral", "kalman"]
   differentiation_method_order:
     type: randint
     lower_bound: 1
-    upper_bound: 2
+    upper_bound: 10
   feature_library:
     type: choice
-    values: ["polynomial", "Fourier", "mixed"]
+    choices: ["polynomial", "Fourier", "mixed"]
   feature_library_order:
     type: randint
     lower_bound: 1
     upper_bound: 10
   optimizer:
     type: choice
-    values: ["STLSQ", "SR3", "SSR", "FROLS"]
+    choices: ["STLSQ", "SR3", "SSR", "FROLS"]
   threshold:
     type: loguniform
     lower_bound: 1.e-3

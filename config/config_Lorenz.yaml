@@ -8,6 +8,6 @@ model:
   differentiation_method_order: 5
   feature_library: 'polynomial'
   feature_library_order: 2
-  optimizer: 'FROLS'
-  threshold: 0.1
-  alpha: 0.05
+  optimizer: 'STLSQ'
+  threshold: 1000.0
+  alpha: 0.1

@@ -5,7 +5,7 @@ model:
   name: SINDy
   train_split: 0.8
   seed: 0
-  n_trials: 1
+  n_trials: 10
   method: 'constant'
   POD_modes: 3
 hyperparameters: # Specify hyperparameters and ranges

@@ -1,0 +1,36 @@
+dataset:
+  name: ODE_Lorenz
+  pair_id: [2]
+model:
+  name: SINDy
+  train_split: 0.8
+  seed: 0
+  n_trials: 10
+  method: 'constant'
+  POD_modes: 3
+hyperparameters: # Specify hyperparameters and ranges
+  differentiation_method:
+    type: choice
+    values: ["finite_difference", "savitzky_golay", "spline", "trend_filtered", "spectral", "kalman"]
+  differentiation_method_order:
+    type: randint
+    lower_bound: 1
+    upper_bound: 2
+  feature_library:
+    type: choice
+    values: ["polynomial", "Fourier", "mixed"]
+  feature_library_order:
+    type: randint
+    lower_bound: 1
+    upper_bound: 10
+  optimizer:
+    type: choice
+    values: ["STLSQ", "SR3", "SSR", "FROLS"]
+  threshold:
+    type: loguniform
+    lower_bound: 1.e-3
+    upper_bound: 1.e-0
+  alpha:
+    type: loguniform
+    lower_bound: 1.e-3
+    upper_bound: 1.e+1

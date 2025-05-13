@@ -1,17 +1,14 @@
 dataset:
-  name: PDE_KS
-  pair_id: [1,2,3,4,5,6,7,8,9]
+  name: ODE_Lorenz
+  pair_id: [4]
 model:
   name: SINDy
   train_split: 0.8
   seed: 0
-  n_trials: 3
+  n_trials: 10
   method: 'constant'
+  POD_modes: 3
 hyperparameters: # Specify hyperparameters and ranges
-  POD_modes:
-    type: randint
-    lower_bound: 1
-    upper_bound: 50
   differentiation_method:
     type: choice
     values: ["finite_difference", "savitzky_golay", "spline", "trend_filtered", "spectral", "kalman"]
@@ -31,9 +28,9 @@ hyperparameters: # Specify hyperparameters and ranges
     values: ["STLSQ", "SR3", "SSR", "FROLS"]
   threshold:
     type: loguniform
-    lower_bound: 1e-4
-    upper_bound: 1e-0
+    lower_bound: 1.e-3
+    upper_bound: 1.e-0
   alpha:
     type: loguniform
-    lower_bound: 1e-4
-    upper_bound: 1e-0
+    lower_bound: 1.e-3
+    upper_bound: 1.e+1

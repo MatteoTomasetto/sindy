@@ -2,8 +2,6 @@ from typing import List, Tuple, Dict, Optional
 import pysindy as ps
 import numpy as np
 
-np.random.seed(2025)
-
 class SINDy:
     """
     Sparse Identification of Nonlinear Dynamics (SINDy).
@@ -55,8 +53,7 @@ class SINDy:
         self.m = train_data[0].shape[0]
         self.n = train_data[0].shape[1]
         self.delta_t = delta_t
-        self.t = np.arange(self.m) * self.delta_t
-
+        
         # Define the initial data for model prediction
         if init_data is not None: # Parametric interpolation/extrapolation task
             self.init_data = init_data[-1,:]

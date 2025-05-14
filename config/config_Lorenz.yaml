@@ -1,13 +1,13 @@
 dataset:
   name: ODE_Lorenz
-  pair_id: [1]
+  pair_id: "all"
 model:
   name: SINDy
   POD_modes: 3
-  differentiation_method: 'finite_difference'
-  differentiation_method_order: 5
+  differentiation_method: 'kalman'
+  differentiation_method_order: 2
   feature_library: 'polynomial'
-  feature_library_order: 2
-  optimizer: 'STLSQ'
-  threshold: 1000.0
-  alpha: 0.1
+  feature_library_order: 3
+  optimizer: 'FROLS'
+  threshold: 1.0
+  alpha: 0.05

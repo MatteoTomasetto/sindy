@@ -2,7 +2,7 @@
 
 This directory contains an implementation of *Sparse Identification of Nonlinear Dynamics* for [CTF-for-Science](https://github.com/CTF-for-Science).
 
-Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designed to identify nonlinear dynamical systems $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ from time-series data. Sparsity promoting strategies are considered in order to obtain interpretable dynamical systems with few active terms in the governing equations, capable of accurately extrapolating beyond the training trajectories. Specifically, given the matrices $X$ and $\frac{d}{dt} X$ collecting, respectively, the time-series $X_{i,j} = x_i(t_j)$ and $\frac{d}{dt} X_{i,j} = \frac{d}{dt}x_i(t_j)$ for $i=1,...,n$ and $j = 1,...,m$, the dynamical system $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ is approximated through
+Sparse Identification of Nonlinear Dynamics (SINDy)* [1] is an algorithm designed to identify nonlinear dynamical systems $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ from time-series data. Sparsity promoting strategies are considered in order to obtain interpretable dynamical systems with few active terms in the governing equations, capable of accurately extrapolating beyond training data. Specifically, given the matrices $X$ and $\frac{d}{dt} X$ collecting, respectively, the time-series $X_{i,j} = x_i(t_j)$ and $\frac{d}{dt} X_{i,j} = \frac{d}{dt}x_i(t_j)$ for $i=1,...,n$ and $j = 1,...,m$, the dynamical system $\dfrac{d}{dt}𝙭(t) = 𝙛(𝙭(t))$ is approximated through
 
 $$
 \dfrac{d}{dt} X = \Theta(X) \Xi
@@ -24,16 +24,18 @@ In particular we leverage Ensemble-SINDy [2], which robustify the SINDy algorith
 - `run.py`: Batch runner script for running the model across multiple sub-datasets in the [CTF-for-Science](https://github.com/CTF-for-Science) framework.
 - `run_opt.py`: Batch runner script for running the model across multiple sub-datasets with hyperparameter tuning in the [CTF-for-Science](https://github.com/CTF-for-Science) framework.
 - `optimize_parameters.py`: Script for tuning the model hyperparameters
-- `config/config_KS.yaml`: Configuration file for running the model on the `Kuramoto-Sivashinsky` test cases for all sub-datasets.
 - `config/config_Lorenz.yaml`: Configuration file for running the model on the `Lorenz` test cases for all sub-datasets.
-- `tuning_config/config_KS.yaml`: Configuration file for tuning the model hyperparameters on the `Kuramoto-Sivashinsky` test cases for all sub-datasets.
-- `tuning_config/config_Lorenz.yaml`: Configuration file for tuning the model hyperparameters on the `Lorenz` test cases for all sub-datasets.
+- `config/config_KS.yaml`: Configuration file for running the model on the `Kuramoto-Sivashinsky` test cases for all sub-datasets.
+- `config/optimal_config_Lorenz_*.yaml`: Configuration file for running the model on the `Lorenz` test cases with optimal hyperparameters for every sub-datasets.
+- `config/optimal_config_KS_*.yaml`: Configuration file for running the model on the `Kuramoto-Sivashinsky` test cases with optimal hyperparameters for every sub-datasets.
+- `tuning_config/config_Lorenz_*.yaml`: Configuration file for tuning the model hyperparameters on the `Lorenz` test cases for every sub-datasets.
+- `tuning_config/config_KS_*.yaml`: Configuration file for tuning the model hyperparameters on the `Kuramoto-Sivashinsky` test cases for every sub-datasets.
  
 The configuration files in the `config` folder specify the hyperparameters for running the model with the following structure
 ```yaml
 dataset:
   name: <dataset_name>  # Test case (e.g. PDE_KS, ODE_Lorenz)
-  pair_id: 'all'        # Which sub-datasets to consider
+  pair_id: <pair_id>    # Which sub-datasets to consider (e.g. [1, 2, 3], 'all')
 model:
   name: SINDy
   POD_modes: <number_POD_modes>                                    # Number of POD modes for dimensionality reduction
@@ -44,8 +46,8 @@ model:
   optimizer: <optimizer>                                           # Optimizer to employ to fit the coefficients
   threshold: <threshold>                                           # Threshold value to sparsify the coefficients in the optimizer
   alpha: <alpha>                                                   # Regularization parameter in the optimizer
-
 ```
+
 The configuration files in the `tuning_config` folder specify, instead, the possible hyperparameter values to explore while tuning them. 
 
 ## Usage

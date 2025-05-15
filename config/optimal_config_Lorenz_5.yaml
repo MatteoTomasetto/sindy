@@ -1,6 +1,6 @@
 dataset:
   name: ODE_Lorenz
-  pair_id: [2]
+  pair_id: [5]
 model:
   POD_modes: 3
   alpha: 0.05

@@ -1,0 +1,13 @@
+dataset:
+  name: ODE_Lorenz
+  pair_id: [7]
+model:
+  POD_modes: 3
+  alpha: 0.05
+  differentiation_method: finite_difference
+  differentiation_method_order: 2
+  feature_library: polynomial
+  feature_library_order: 2
+  name: SINDy
+  optimizer: SR3
+  threshold: 0.1

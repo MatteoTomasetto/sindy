@@ -5,7 +5,7 @@ model:
   name: SINDy
   train_split: 0.8
   seed: 0
-  n_trials: 10
+  n_trials: 100
   method: 'constant'
   POD_modes: 3
 hyperparameters: # Specify hyperparameters and ranges
@@ -29,7 +29,7 @@ hyperparameters: # Specify hyperparameters and ranges
   threshold:
     type: loguniform
     lower_bound: 1.e-3
-    upper_bound: 1.e-0
+    upper_bound: 1.e+3
   alpha:
     type: loguniform
     lower_bound: 1.e-3

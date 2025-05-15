@@ -1,0 +1,13 @@
+dataset:
+  name: PDE_KS
+  pair_id: [3]
+model:
+  POD_modes: 20
+  alpha: 0.05
+  differentiation_method: finite_difference
+  differentiation_method_order: 2
+  feature_library: polynomial
+  feature_library_order: 1
+  name: SINDy
+  optimizer: STLSQ
+  threshold: 10

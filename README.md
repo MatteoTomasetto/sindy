@@ -17,8 +17,6 @@ where $\Theta(X)$ is a library of regressions terms (polynomials or trigonometri
 </p>
 <br />
 
-In particular we leverage Ensemble-SINDy [2], which robustify the SINDy algorithm through boostrap aggregating (bagging) strategies.
-
 ## Files
 - `sindy.py`: Contains the `SINDy` class implementing the model logic based on [pysindy](https://github.com/dynamicslab/pysindy).
 - `run.py`: Batch runner script for running the model across multiple sub-datasets in the [CTF-for-Science](https://github.com/CTF-for-Science) framework.

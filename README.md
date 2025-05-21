@@ -67,6 +67,3 @@ pip install pysindy
 
 ## References
 [1] S.L. Brunton, J.L. Proctor, J.N. Kutz, *Discovering Governing Equations from Data by Sparse Identification of Nonlinear Dynamical Systems*. Proceedings of the National Academy of Sciences 113 (15): 3932–37 (2016). [https://doi.org/10.1073/pnas.1517384113](https://doi.org/10.1073/pnas.1517384113)
-
-[2] U. Fasel, J.N. Kutz, B.W. Brunton, S.L. Brunton, *Ensemble-SINDy: Robust sparse model discovery in the low-data, high-noise limit, with active learning and control*, Proc. R. Soc. A. 47820210904 (2022). [http://doi.org/10.1098/rspa.2021.0904](http://doi.org/10.1098/rspa.2021.0904)
-
